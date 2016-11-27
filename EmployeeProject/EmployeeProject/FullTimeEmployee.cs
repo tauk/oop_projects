@@ -18,7 +18,15 @@ namespace EmployeeProject
             base.empId = id;
             base.empName = name;
             //set the specific attributes for the class
+
+            //basic salary must be at least 5000 or above
+            if (basic < 5000 || basic > 30000)
+                throw new PaymentOutOfRange("Basic salary out of range");
             BasicSalary = basic;
+
+            //basic salary must be at least 5000 or above
+            if (allowances < 3000 || allowances > 1000)
+                throw new PaymentOutOfRange("Allowances out of range");
             Allowances = allowances;
         }
 

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EmployeeProject
@@ -38,9 +34,11 @@ namespace EmployeeProject
             double basicSal;
             double dAllowances;
 
+            //try to parse and the values from text box to numeric types
             bool basicIsDouble = Double.TryParse(basic, out basicSal);
             bool allowancesIsDouble = Double.TryParse(allowances, out dAllowances);
 
+            //if values from text boxes could not be converted to numeric - show error message
             if (basicIsDouble == false )
             {
                 MessageBox.Show("Enter a number for basic Salary");
@@ -49,26 +47,33 @@ namespace EmployeeProject
 
             if (allowancesIsDouble == false)
             {
-                MessageBox.Show("Enter a number for basic Salary");
+                MessageBox.Show("Enter a number for allowances");
                 return;
             }
 
             //check of empId already exist
             if (DoesEmpIdExist(id))
             {
-                MessageBox.Show("Emp Id {0} already exist", id);
+                MessageBox.Show("Emp Id " +id+ " already exist");
                 txtEmpID.Focus();
                 return;
             }
 
-            //create a new object and add it to the empList
-            FullTimeEmployee ft = new FullTimeEmployee(id, name, basicSal, dAllowances);
-            empList.Add(ft);
+            try
+            {
+                //create a new object and add it to the empList
+                FullTimeEmployee ft = new FullTimeEmployee(id, name, basicSal, dAllowances);
+                empList.Add(ft);
 
-            //show status in the status label
-            lblStatus.Text = "Record added for " + name;
+                //show status in the status label
+                lblStatus.Text = "Record added for " + name;
 
-            DisplayEmployees(empList);
+                DisplayEmployees(empList);
+            }
+            catch(PaymentOutOfRange payException)
+            {
+                MessageBox.Show("Incorrect values: " + payException.Message);
+            }
         }
 
         private void btnShowAll_Click(object sender, EventArgs e)
@@ -126,7 +131,7 @@ namespace EmployeeProject
 
             lblStatus.Text = string.Format("Found {0} records ", employees.Count);
 
-            DisplayEmployees(empList);
+            DisplayEmployees(employees);
         }
 
         private void btnAddPartTime_Click(object sender, EventArgs e)
@@ -147,9 +152,11 @@ namespace EmployeeProject
             double hourlyRate;
             int  hoursWorked;
 
+            //try to parse and the values from text box to numeric types
             bool rateIsDouble = Double.TryParse(rate, out hourlyRate);
             bool hoursIsInt = Int32.TryParse(hours, out hoursWorked);
 
+            //values from textbox are not numeric - show error message
             if (rateIsDouble == false)
             {
                 MessageBox.Show("Enter a number for hourly rate!");
